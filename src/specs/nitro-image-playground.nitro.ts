@@ -2,8 +2,14 @@ import { type HybridObject } from 'react-native-nitro-modules'
 
 /**
  * Valid image generation styles for Image Playground
+ * Note: Available styles may vary by device and iOS version
  */
-export type ImagePlaygroundStyle = 'animation' | 'illustration' | 'sketch'
+export type ImagePlaygroundStyle =
+  | 'animation'
+  | 'emoji'
+  | 'illustration'
+  | 'sketch'
+  | 'messages-background'
 
 export interface NitroImagePlayground extends HybridObject<{ ios: 'swift' }> {
   /**

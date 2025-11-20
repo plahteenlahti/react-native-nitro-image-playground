@@ -64,19 +64,31 @@ class HybridNitroImagePlayground: HybridNitroImagePlaygroundSpec {
 
     func isAvailable() throws -> Promise<Bool> {
         return Promise.async {
-            guard self.checkPlatformAvailability() else { return false }
+            guard self.checkPlatformAvailability() else {
+                print("[ImagePlayground] Platform check failed: iOS version < 18.4 or framework not available")
+                return false
+            }
 
             #if canImport(ImagePlayground)
             if #available(iOS 18.4, *) {
                 do {
+                    print("[ImagePlayground] Attempting to initialize ImageCreator...")
                     let manager = self.getManager()
                     _ = try await manager.getCreator()
+                    print("[ImagePlayground] ImageCreator initialized successfully")
                     return true
                 } catch {
+                    print("[ImagePlayground] Failed to initialize ImageCreator: \(error)")
+                    print("[ImagePlayground] Error details: \(error.localizedDescription)")
+                    if let nsError = error as NSError? {
+                        print("[ImagePlayground] Error domain: \(nsError.domain), code: \(nsError.code)")
+                        print("[ImagePlayground] Error userInfo: \(nsError.userInfo)")
+                    }
                     return false
                 }
             }
             #endif
+            print("[ImagePlayground] Availability check returned false (should not reach here)")
             return false
         }
     }
@@ -193,44 +205,51 @@ class HybridNitroImagePlayground: HybridNitroImagePlaygroundSpec {
     @available(iOS 18.4, *)
     private func styleToString(_ style: Any) -> String {
         #if canImport(ImagePlayground)
-        // Convert style enum to string representation
-        let styleDescription = String(describing: style)
-        // The description might be something like "animation" or include more info
-        // Extract just the style name
-        return styleDescription.lowercased().components(separatedBy: ".").last ?? styleDescription.lowercased()
+        // Convert style to string representation
+        let styleDescription = String(describing: style).lowercased()
+
+        // Format: imageplaygroundstyle(id: "animation", _representationinfo: nil)
+        // Extract the ID value between quotes
+        if let idRange = styleDescription.range(of: "id: \""),
+           let endQuoteRange = styleDescription[idRange.upperBound...].range(of: "\"") {
+            let id = String(styleDescription[idRange.upperBound..<endQuoteRange.lowerBound])
+            return id
+        }
+
+        // Fallback: try to extract from simpler formats
+        if styleDescription.contains(".") {
+            return styleDescription.components(separatedBy: ".").last ?? styleDescription
+        }
+
+        return styleDescription
         #else
         return "illustration"
         #endif
     }
 
     /// Converts a CreatedImage to a base64-encoded data URL.
-    /// CreatedImage has an .image property that returns the CGImage directly.
+    /// CreatedImage has a .cgImage property that returns the CGImage directly.
     @available(iOS 18.4, *)
     private func convertCreatedImageToBase64(_ createdImage: Any) throws -> String {
         #if canImport(ImagePlayground)
-        // CreatedImage has an .image property according to Apple's documentation
-        // Use KVC to access it safely
-        guard let imageWithProperty = createdImage as? NSObject else {
-            throw RuntimeError.error(withMessage: "CreatedImage does not conform to NSObject")
+        // Use reflection to access the cgImage property since CreatedImage is a struct
+        let mirror = Mirror(reflecting: createdImage)
+
+        // Look for the "cgImage" property
+        for child in mirror.children {
+            if child.label == "cgImage" {
+                // Verify the value is a CGImage using CFTypeID before casting
+                guard CFGetTypeID(child.value as CFTypeRef) == CGImage.typeID else {
+                    throw RuntimeError.error(withMessage: "cgImage property is not a CGImage")
+                }
+
+                // Use unsafeBitCast since we've verified the type
+                let cgImage = unsafeBitCast(child.value as CFTypeRef, to: CGImage.self)
+                return try self.convertCGImageToBase64(cgImage)
+            }
         }
 
-        do {
-            guard let imageValue = imageWithProperty.value(forKey: "image") else {
-                throw RuntimeError.error(withMessage: "CreatedImage does not have an 'image' property")
-            }
-
-            // Verify it's a CGImage and cast it
-            guard CFGetTypeID(imageValue as CFTypeRef) == CGImage.typeID else {
-                throw RuntimeError.error(withMessage: "Image property is not a CGImage (type ID: \(CFGetTypeID(imageValue as CFTypeRef)))")
-            }
-
-            let cgImage = unsafeBitCast(imageValue, to: CGImage.self)
-            return try self.convertCGImageToBase64(cgImage)
-        } catch let error as RuntimeError {
-            throw error
-        } catch {
-            throw RuntimeError.error(withMessage: "Failed to access image property: \(error.localizedDescription)")
-        }
+        throw RuntimeError.error(withMessage: "Failed to find 'cgImage' property in CreatedImage. Properties found: \(mirror.children.compactMap { $0.label }.joined(separator: ", "))")
         #else
         throw RuntimeError.error(withMessage: "ImagePlayground framework is not available")
         #endif

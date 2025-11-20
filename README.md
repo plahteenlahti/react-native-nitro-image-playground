@@ -201,6 +201,64 @@ Generate images based on text concepts.
 - Requires device with Neural Engine support
 - Thread-safe but sequential: concurrent generation requests will be queued
 
+## Troubleshooting
+
+### Image Playground shows as "not available"
+
+If `isAvailable()` returns `false`, check the Xcode console for diagnostic messages starting with `[ImagePlayground]`.
+
+#### Common Error: "Image Playground is not supported on this device"
+
+**Error Code**: `ImageCreatorError` domain, code 0
+
+**Cause**: You're running on a simulator or unsupported device.
+
+**Solution**:
+- **Use a physical device** - Image Playground does not work on simulators
+- Ensure device has Apple Intelligence support:
+  - iPhone 15 Pro or later
+  - iPad with M1 chip or later
+  - Mac with Apple Silicon (for Mac Catalyst apps)
+
+#### Common Error: "accessNotGrantedUseCases is unknown"
+
+This is a system log that appears before the actual error. Check the next log line for the real error message.
+
+### Other Issues
+
+1. **Apple Intelligence Not Enabled**:
+   - Go to Settings > Apple Intelligence & Siri
+   - Enable Apple Intelligence
+   - Download required models if prompted
+
+2. **Insufficient Storage**:
+   - Image Playground requires several GB for AI models
+   - Check Settings > General > [Device] Storage
+
+3. **Regional Restrictions**:
+   - Apple Intelligence may not be available in all regions
+   - Check Apple's documentation for supported regions
+
+### Debug Logs
+
+The module outputs detailed diagnostic information to help troubleshoot:
+
+```
+[ImagePlayground] Platform check failed: iOS version < 18.4 or framework not available
+[ImagePlayground] Attempting to initialize ImageCreator...
+[ImagePlayground] Failed to initialize ImageCreator: notSupported
+[ImagePlayground] Error details: Image Playground is not supported on this device.
+[ImagePlayground] Error domain: ImageCreatorError, code: 0
+```
+
+### Testing
+
+To properly test Image Playground:
+1. **Must use a physical device** running iOS 18.4+ (iOS 26+)
+2. Device must support Apple Intelligence
+3. Check Xcode console for `[ImagePlayground]` diagnostic messages
+4. Verify `isAvailable()` returns `true` before attempting generation
+
 ## Development
 
 See the [example](./example) folder for a complete working app demonstrating all features.

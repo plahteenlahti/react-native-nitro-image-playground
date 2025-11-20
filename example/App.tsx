@@ -92,14 +92,17 @@ function App(): React.JSX.Element {
       <View style={styles.container}>
         <Text style={styles.errorTitle}>⚠️ Not Available</Text>
         <Text style={styles.errorText}>
-          Image Playground requires iOS 18.4 or later.
+          Image Playground is not supported on this device.
         </Text>
         <Text style={styles.errorSubtext}>
-          Please update your device to use this feature.
+          Image Playground requires a physical device with Apple Intelligence support (iPhone 15 Pro or later, iPad with M1+).{'\n\n'}
+          Simulators are not supported.
         </Text>
       </View>
     )
   }
+
+  console.log('availableStyles', availableStyles)
 
   return (
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>

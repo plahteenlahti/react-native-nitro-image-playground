@@ -1,0 +1,23 @@
+{
+  "$schema": "https://nitro.margelo.com/nitro.schema.json",
+  "cxxNamespace": [
+    "nitroimageplayground"
+  ],
+  "ios": {
+    "iosModuleName": "NitroImagePlayground"
+  },
+  "android": {
+    "androidNamespace": [
+      "nitroimageplayground"
+    ],
+    "androidCxxLibName": "NitroImagePlayground"
+  },
+  "autolinking": {
+    "NitroImagePlayground": {
+      "swift": "HybridNitroImagePlayground"
+    }
+  },
+  "ignorePaths": [
+    "**/node_modules"
+  ]
+}

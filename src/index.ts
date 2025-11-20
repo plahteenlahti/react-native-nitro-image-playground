@@ -3,3 +3,5 @@ import type { NitroImagePlayground as NitroImagePlaygroundSpec } from './specs/n
 
 export const NitroImagePlayground =
   NitroModules.createHybridObject<NitroImagePlaygroundSpec>('NitroImagePlayground')
+
+export type { ImagePlaygroundStyle } from './specs/nitro-image-playground.nitro'

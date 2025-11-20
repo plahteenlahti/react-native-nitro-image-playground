@@ -1,6 +1,19 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Image Playground Example App
 
-# Getting Started
+This example app demonstrates the usage of `react-native-nitro-image-playground`, a React Native module that integrates Apple's Image Playground API for AI image generation.
+
+## Features
+
+- Check Image Playground availability
+- Select from available image styles (Animation, Illustration, Sketch)
+- Generate 1-4 images from text descriptions
+- Display generated images in base64 format
+
+## Requirements
+
+- iOS 18.4 or later (Image Playground API requirement)
+- A physical device or simulator running iOS 18.4+
+- Xcode 16.2 or later
 
 > **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 

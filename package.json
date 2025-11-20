@@ -43,11 +43,11 @@
   "workspaces": [
     "example"
   ],
-  "repository": "https://github.com/perttulähteenlahti/react-native-nitro-image-playground.git",
+  "repository": "https://github.com/plahteenlahti/react-native-nitro-image-playground.git",
   "author": "Perttu Lähteenlahti",
   "license": "MIT",
-  "bugs": "https://github.com/perttulähteenlahti/react-native-nitro-image-playground/issues",
-  "homepage": "https://github.com/perttulähteenlahti/react-native-nitro-image-playground#readme",
+  "bugs": "https://github.com/plahteenlahti/react-native-nitro-image-playground/issues",
+  "homepage": "https://github.com/plahteenlahti/react-native-nitro-image-playground#readme",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"

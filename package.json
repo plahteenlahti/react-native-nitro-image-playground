@@ -1,6 +1,6 @@
 {
   "name": "react-native-nitro-image-playground",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "react-native-nitro-image-playground is a react native package built with Nitro",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",

@@ -6,6 +6,11 @@ A React Native module that provides access to Apple's Image Playground API for g
 [![Downloads](https://img.shields.io/npm/dm/react-native-nitro-image-playground.svg)](https://www.npmjs.com/package/react-native-nitro-image-playground)
 [![License](https://img.shields.io/npm/l/react-native-nitro-image-playground.svg)](https://github.com/patrickkabwe/react-native-nitro-image-playground/LICENSE)
 
+
+
+https://github.com/user-attachments/assets/feab12d3-9703-44e3-bafa-16b518135fe7
+
+
 ## Features
 
 - Generate AI images using Apple's Image Playground API
